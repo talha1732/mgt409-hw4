@@ -1,0 +1,7 @@
+# Backend (FastAPI + PydanticAI agent). Install into a virtualenv, then run from backend/.
+# Pinned to the versions this project was built and tested with (PydanticAI's API changes between majors).
+fastapi==0.142.2
+uvicorn==0.54.0
+pydantic==2.13.5
+pydantic-ai-slim[openai]==2.54.0
+openai==3.24.0

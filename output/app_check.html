@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campus Customs: App Check</title>
+<style>
+  :root { --blue: #00356b; --ivory: #faf7f0; --border: #e3dccb; --muted: #5d6676; --crimson: #c8102e; --green: #1f7a3f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #1a2230; background: var(--ivory); line-height: 1.6; }
+  header { background: var(--blue); color: #fff; padding: 36px 24px 28px; border-bottom: 4px solid var(--crimson); }
+  header h1 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 2rem; }
+  header p { margin: 0; color: #c9d6ea; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+  nav.toc { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; }
+  nav.toc a { color: var(--blue); }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; }
+  section { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 26px; margin-bottom: 32px; box-shadow: 0 2px 10px rgba(10,30,60,.05); }
+  h2 { font-family: Georgia, serif; color: var(--blue); margin: 0 0 6px; font-size: 1.5rem; }
+  .pass { display: inline-block; background: #e5f4ea; color: var(--green); font-weight: 700; font-size: .78rem; letter-spacing: .06em; padding: 3px 10px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
+  .proves { font-size: 1.02rem; margin: 6px 0 16px; }
+  figure { margin: 18px 0 8px; }
+  figure img { width: 100%; border: 1px solid var(--border); border-radius: 10px; display: block; }
+  figcaption { color: var(--muted); font-size: .92rem; margin-top: 8px; }
+  figcaption b { color: #1a2230; }
+  table { border-collapse: collapse; margin: 10px 0; font-size: .92rem; }
+  th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: center; }
+  th { background: #f3efe4; }
+  td.out { color: var(--crimson); font-weight: 600; }
+  .quote { background: #f3f6fb; border-left: 4px solid var(--blue); padding: 10px 14px; border-radius: 6px; margin: 10px 0; }
+  .quote b { color: var(--blue); }
+  code { background: #f3efe4; padding: 1px 6px; border-radius: 4px; font-size: .9em; }
+  footer { text-align: center; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs: App Check</h1>
+  <p>Live-site test of the shop + chatbot, run on Sat Oct 3 2026 at <code style="background:rgba(255,255,255,.15);color:#fff">http://localhost:5173</code> (React front end → FastAPI → PydanticAI agent, model <code style="background:rgba(255,255,255,.15);color:#fff">gpt-5.6-luna</code>). Screenshots were taken in Chrome at 1440×900 during the run. Click any image to open it full size.</p>
+</header>
+
+<main>
+  <nav class="toc">
+    <strong>Checks</strong>
+    <ol>
+      <li><a href="#inventory">Chat checks the inventory level of an item (honest stock + price from the DB)</a></li>
+      <li><a href="#cards">Dynamic search-result cards after a category question ("What hoodies do you have?")</a></li>
+      <li><a href="#usability">Usability feature from Problem 9: search, category and "in stock in my size" filters</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===================== 1 ===================== -->
+  <section id="inventory">
+    <h2>1. Chat checks inventory level <span class="pass">PASS</span></h2>
+    <p class="proves">The chat's stock and price answer for the Ice Hockey Left Chest Hoodie matches the database exactly, including the sizes that are sold out.</p>
+
+    <p><b>Ground truth</b>, queried from <code>data/campus_customs.db</code> (<code>catalogue</code> + <code>inventory</code>) at test time:</p>
+    <table>
+      <tr><th>product_id</th><th>price</th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>XXL</th></tr>
+      <tr><td>ice-hockey-left-chest-hoodie</td><td>$68.00</td><td>20</td><td>8</td><td class="out">0</td><td class="out">0</td><td class="out">0</td><td>25</td></tr>
+    </table>
+
+    <figure>
+      <a href="app_check_images/inventory_page.png" target="_blank"><img src="app_check_images/inventory_page.png" alt="Product page for the Ice Hockey Left Chest Hoodie showing price and stock per size" /></a>
+      <figcaption><b>1a. Product page.</b> $68.00; XS 20 left, S 8 left, M / L / XL sold out (hatched), XXL 25 left. Same numbers as the DB.</figcaption>
+    </figure>
+
+    <div class="quote"><b>Shopper (on that product page):</b> "How many of these do you have in XS and in M? And what is the price?"<br />
+    <b>Assistant:</b> "The Ice Hockey Left Chest Hoodie is $68.00. I have 20 in XS; M is out of stock. It's also in stock in S and XXL, and I've included similar M-size hockey/sports hoodies below."</div>
+
+    <figure>
+      <a href="app_check_images/inventory.png" target="_blank"><img src="app_check_images/inventory.png" alt="Chat answering stock and price question, with similar in-stock hoodies shown as cards" /></a>
+      <figcaption><b>1b. Chat answer.</b> Price $68.00 ✓, XS = 20 ✓, M clearly "out of stock" ✓, other in-stock sizes S and XXL ✓. The shopper said "these" and didn't name the item; the agent knew which product from the page context. Because M is sold out, it also called <code>find_similar_products</code> and put the item plus 4 similar hoodies that <i>are</i> in stock in M on the page (5 cards), instead of stopping at "out of stock."</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 2 ===================== -->
+  <section id="cards">
+    <h2>2. Dynamic search-result cards <span class="pass">PASS</span></h2>
+    <p class="proves">A category question in the chat puts matching products on the website itself as product cards (image, name, price, short info), and each card still opens the single-item page.</p>
+
+    <div class="quote"><b>Shopper (home page):</b> "What hoodies do you have?"<br />
+    <b>Assistant:</b> "We have 27 hoodies in the catalog! I've put the top matches on the page, including classic Yale styles, full-zips, Bulldog designs, and sport options. Want to narrow them by college, sport, color, or budget?"</div>
+
+    <figure>
+      <a href="app_check_images/search_cards.png" target="_blank"><img src="app_check_images/search_cards.png" alt="Twelve hoodie product cards rendered on the home page from the chat" /></a>
+      <figcaption><b>2a. Cards on the page.</b> The agent returned 12 structured <code>product_ids</code>, and the front end rendered them as cards at the top of the home page ("12 items from the assistant"). All are hoodies, from Basic Hoodie Big Yale to The Forest School Hoodie. The "27 hoodies" total is honest: the DB has 27 products whose type or name contains "hood". Card prices and descriptions come from the DB, not from the chat text.</figcaption>
+    </figure>
+
+    <figure>
+      <a href="app_check_images/search_card_detail.png" target="_blank"><img src="app_check_images/search_card_detail.png" alt="Clicking a chat card opens the Basic Hoodie Big Yale detail page" /></a>
+      <figcaption><b>2b. Card → single-item page.</b> Clicking the first chat card opened <code>/products/basic-hoodie-big-yale</code> with the large image, full description, price, colors and stock per size, the same page as in Problem 3. The chat results collapsed to a bar at the top ("Show") so the shopper can get back to the list.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 3 ===================== -->
+  <section id="usability">
+    <h2>3. Usability feature (Problem 9): search + filters on the Products page <span class="pass">PASS</span></h2>
+    <p class="proves">Shoppers can narrow the 102 products to exactly what they can buy. "Hoodies" + "hockey" + "In stock in M" leaves only the hockey hoodie that is actually available in M.</p>
+
+    <figure>
+      <a href="app_check_images/filters.png" target="_blank"><img src="app_check_images/filters.png" alt="Products page filtered to Hoodies, search hockey, in stock in M, showing one result" /></a>
+      <figcaption><b>3. Filters applied.</b> Hoodies chip + search "hockey" gave 2 items (Ice Hockey Left Chest Hoodie, Yale Sports Hoodie Hockey). Adding <b>In stock in M</b> left <b>1 of 102</b>: the Yale Sports Hoodie Hockey. The Ice Hockey hoodie was correctly removed because its M stock is 0 (see Check 1). The filters are saved in the URL (<code>/products?cat=Hoodies&amp;q=hockey&amp;size=M</code>), so the view can be shared or bookmarked.</figcaption>
+    </figure>
+  </section>
+
+  <footer>Screenshots: <code>output/app_check_images/</code> · Write-ups: <code>output/usability.md</code>, <code>output/design.md</code>, <code>output/harness.md</code></footer>
+</main>
+</body>
+</html>
