@@ -1,28 +1,5 @@
-# --- Secrets: never commit ---
-.env
-.env.*
-!.env.example
-
-# --- Local-only data pack (DB + product images) ---
-data/
-*.db
-*.sqlite
-
-# --- Python ---
-.venv/
-venv/
-__pycache__/
-*.pyc
-
-# --- Node / Vite ---
-node_modules/
-frontend/dist/
-
-# --- Audit trail temp/backup files (the trail itself IS committed) ---
-output/audit_trail.tmp
-output/audit_trail.corrupt-*.json
-
-# --- OS / editor ---
-.DS_Store
-.vscode/
-.idea/
+# Repo root holds only the hw4/ project folder. Everything else in this directory stays local
+# (e.g. assignment_screenshots.pdf). hw4/.gitignore handles .env, data/, node_modules, etc.
+/*
+!/.gitignore
+!/hw4/

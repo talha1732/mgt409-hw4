@@ -17,7 +17,14 @@ Full system documentation is in [`output/harness.md`](output/harness.md).
 - Node.js 20.19+ or 22.12+ and npm (required by Vite 8; tested on Node 26)
 - A Portkey API key (for the chat agent)
 
-## 2. Place the data pack
+## 2. Get the code
+```bash
+git clone https://github.com/talha1732/mgt409-hw4.git
+cd mgt409-hw4          # the project is in the hw4/ folder inside the repo
+```
+All commands below start from `mgt409-hw4/`.
+
+## 3. Place the data pack
 The database and product images aren't committed. Copy the course data pack into `hw4/data/` so it looks like this:
 
 ```
@@ -29,14 +36,15 @@ hw4/
 
 On first start the backend adds a `sessions` table for logins and converts the demo account's password hash to the current format, so `test@campuscustoms.yale.edu` / `password` works out of the box. No other setup is needed.
 
-## 3. Add your API key
+## 4. Add your API key
 ```bash
+cd hw4
 cp .env.example .env
 # edit .env and set PORTKEY_API_KEY=...
 ```
 The backend looks for `.env` in `hw4/` or any parent folder.
 
-## 4. Run the back end (terminal 1)
+## 5. Run the back end (terminal 1)
 ```bash
 cd hw4
 python3 -m venv .venv
@@ -48,7 +56,7 @@ uvicorn main:app --reload --port 8000
 ```
 API: `http://localhost:8000` (docs at `/docs`).
 
-## 5. Run the front end (terminal 2)
+## 6. Run the front end (terminal 2)
 ```bash
 cd hw4/frontend
 npm install
@@ -58,7 +66,7 @@ Open **http://localhost:5173**. Vite forwards `/api/*` and `/images/*` to the ba
 
 **Test login:** `test@campuscustoms.yale.edu` / `password`, or create a new account.
 
-## 6. Things to try
+## 7. Things to try
 - **Products page:** search "hockey", tap the *Hoodies* chip, choose *In stock in M*.
 - **Chat** (bottom right): "What hoodies do you have?" puts product cards on the page.
 - On a product page, click **Ask about this item**, then "Is this in stock in M?". If it's sold out you'll get in-stock alternatives.
