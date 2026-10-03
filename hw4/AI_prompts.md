@@ -1,9 +1,3 @@
-content = r"""#Problem 1: Vibe coder prompts
-
-Prompt:
-Keep the prompts I use for each problem in `AI_prompts.md` and add the follow up prompts too if I need any.
-
-
 #Problem 2: Analyze the database
 
 Prompt:
@@ -219,10 +213,4 @@ Keep the data folder local only.
 Also update `README.md` with how to run the frontend and backend after putting the data pack in the right place.
 
 In the end give me the GitHub repo URL.
-"""
 
-path = "/mnt/data/AI_prompts_HW4_fixed.md"
-with open(path, "w", encoding="utf-8") as f:
-    f.write(content)
-
-print(path)
